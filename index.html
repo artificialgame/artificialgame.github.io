@@ -1,0 +1,102 @@
+---
+layout: default
+title: Play Classic Browser Games
+description: Artificial Game hosts classic free browser games you can play instantly on desktop and mobile.
+---
+<section class="hero">
+  <div class="container">
+    <h1>Play Classic Games. Instantly.</h1>
+    <p>Artificial Game is a fast, ad-light collection of retro games rebuilt in modern HTML5 and JavaScript.</p>
+    <a class="button" href="{{ '/games/' | relative_url }}">Browse all games</a>
+  </div>
+</section>
+
+<section class="container toolbar">
+  <input type="search" id="gameSearch" placeholder="Search games, tags, or categories..." aria-label="Search games" />
+  <div id="categoryFilters" class="filters">
+    <button class="active" data-category="all">All</button>
+    {% assign categories = 'Arcade|Puzzle|Board|Card|Strategy' | split: '|' %}
+    {% for cat in categories %}
+      <button data-category="{{ cat | downcase }}">{{ cat }}</button>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="container">
+  <h2>Featured Games</h2>
+  <div class="game-grid" id="featuredGrid">
+    {% assign featured = site.games | where: 'featured', true | sort: 'date' | reverse %}
+    {% for game in featured limit: 6 %}
+      <article class="game-card" data-category="{{ game.category | downcase }}" data-search="{{ game.title }} {{ game.tags | join: ' ' }} {{ game.description }}">
+        <a href="{{ game.url | relative_url }}">
+          <img loading="lazy" src="{{ game.thumbnail | relative_url }}" alt="{{ game.title }} thumbnail" />
+          <div>
+            <h3>{{ game.title }}</h3>
+            <p>{{ game.short_description }}</p>
+          </div>
+        </a>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="container">
+  <h2>Latest Games</h2>
+  {% assign latest_games = site.games | sort: 'date' | reverse %}
+  {% assign per_page = site.paginate | default: 8 %}
+  {% assign current_page = paginator.page | default: 1 %}
+  {% assign offset_games = per_page | times: current_page | minus: per_page %}
+  {% assign total_pages = latest_games.size | plus: per_page | minus: 1 | divided_by: per_page %}
+  <div class="game-grid" id="latestGrid">
+    {% for game in latest_games offset: offset_games limit: per_page %}
+      <article class="game-card" data-category="{{ game.category | downcase }}" data-search="{{ game.title }} {{ game.tags | join: ' ' }} {{ game.description }}">
+        <a href="{{ game.url | relative_url }}">
+          <img loading="lazy" src="{{ game.thumbnail | relative_url }}" alt="{{ game.title }} thumbnail" />
+          <div>
+            <h3>{{ game.title }}</h3>
+            <p>{{ game.short_description }}</p>
+          </div>
+        </a>
+      </article>
+    {% endfor %}
+  </div>
+  {% assign prev_page = current_page | minus: 1 %}
+  {% assign next_page = current_page | plus: 1 %}
+  <nav class="pagination">
+    {% if current_page > 1 %}
+      {% if prev_page == 1 %}<a href="{{ '/' | relative_url }}">Newer</a>{% else %}<a href="{{ '/page/' | append: prev_page | append: '/' | relative_url }}">Newer</a>{% endif %}
+    {% endif %}
+    <span>Page {{ current_page }} of {{ total_pages }}</span>
+    {% if current_page < total_pages %}<a href="{{ '/page/' | append: next_page | append: '/' | relative_url }}">Older</a>{% endif %}
+  </nav>
+</section>
+
+<section class="container faq">
+  <h2>FAQ</h2>
+  <details><summary>Are these games free?</summary><p>Yes. Every game is free to play in your browser.</p></details>
+  <details><summary>Do they work on mobile?</summary><p>Yes, each game supports touch controls and responsive layouts.</p></details>
+  <details><summary>Do I need to install anything?</summary><p>No installation required. Open and play instantly.</p></details>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{{ site.title }}",
+  "url": "{{ site.url }}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ site.url }}/games/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "{{ site.title }}",
+  "url": "{{ site.url }}",
+  "logo": "{{ site.url }}/assets/images/default-game.svg"
+}
+</script>
