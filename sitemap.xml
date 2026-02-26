@@ -1,0 +1,20 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{{ site.url }}{{ '/' | relative_url }}</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ '/games/' | relative_url }}</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+  </url>
+  {% for game in site.games %}
+  <url>
+    <loc>{{ site.url }}{{ game.url }}</loc>
+    <lastmod>{{ game.date | date_to_xmlschema }}</lastmod>
+  </url>
+  {% endfor %}
+</urlset>

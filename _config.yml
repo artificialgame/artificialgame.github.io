@@ -1,0 +1,27 @@
+title: Artificial Game
+description: Play classic browser games rebuilt with modern HTML5, JavaScript, and responsive design.
+url: https://artificialgame.github.io
+baseurl: ""
+lang: en
+markdown: kramdown
+permalink: pretty
+paginate: 8
+paginate_path: "/page/:num/"
+collections:
+  games:
+    output: true
+    permalink: /games/:slug/
+defaults:
+  - scope:
+      path: ""
+      type: games
+    values:
+      layout: game
+      image: /assets/images/default-game.svg
+      seo_type: VideoGame
+plugins:
+  - jekyll-sitemap
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock

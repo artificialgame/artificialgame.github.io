@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<section class="game-hero container">
+  <a class="back-link" href="{{ '/games/' | relative_url }}">← Back to all games</a>
+  <h1>{{ page.title }}</h1>
+  <p class="lede">{{ page.description }}</p>
+  <div class="badge-row">
+    <span>{{ page.category }}</span>
+    {% for tag in page.tags %}<span>{{ tag }}</span>{% endfor %}
+  </div>
+</section>
+<section class="container game-instructions">
+  <h2>How to Play</h2>
+  <p>{{ page.instructions }}</p>
+</section>
+<section class="container game-shell">
+  <div class="canvas-fallback" role="status">If your browser blocks Canvas/Web APIs, this game may not render correctly.</div>
+  {{ content }}
+</section>
+<script defer src="{{ page.game_script | relative_url }}"></script>
