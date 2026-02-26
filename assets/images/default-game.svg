@@ -1,0 +1,6 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 675'>
+<defs><linearGradient id='g' x1='0' x2='1'><stop stop-color='#1f2937'/><stop offset='1' stop-color='#7c3aed'/></linearGradient></defs>
+<rect width='1200' height='675' fill='url(#g)'/>
+<text x='50%' y='46%' text-anchor='middle' fill='#41f1d1' font-size='78' font-family='Arial'>Artificial Game</text>
+<text x='50%' y='58%' text-anchor='middle' fill='white' font-size='36' font-family='Arial'>Play Instantly</text>
+</svg>

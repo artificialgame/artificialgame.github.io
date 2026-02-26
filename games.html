@@ -1,0 +1,34 @@
+---
+layout: default
+title: All Games
+description: Explore the full Artificial Game library with classic arcade, puzzle, board, and card games.
+permalink: /games/
+---
+<section class="container page-head">
+  <h1>Game Library</h1>
+  <p>20+ playable classics optimized for modern browsers.</p>
+</section>
+<section class="container toolbar">
+  <input type="search" id="gameSearch" placeholder="Search all games..." aria-label="Search all games" />
+  <div id="categoryFilters" class="filters">
+    <button class="active" data-category="all">All</button>
+    {% assign categories = site.games | map: 'category' | uniq | sort %}
+    {% for cat in categories %}
+      <button data-category="{{ cat | downcase }}">{{ cat }}</button>
+    {% endfor %}
+  </div>
+</section>
+<section class="container game-grid" id="libraryGrid">
+  {% assign all_games = site.games | sort: 'title' %}
+  {% for game in all_games %}
+    <article class="game-card" data-category="{{ game.category | downcase }}" data-search="{{ game.title }} {{ game.tags | join: ' ' }} {{ game.description }}">
+      <a href="{{ game.url | relative_url }}">
+        <img loading="lazy" src="{{ game.thumbnail | relative_url }}" alt="{{ game.title }} thumbnail" />
+        <div>
+          <h2>{{ game.title }}</h2>
+          <p>{{ game.short_description }}</p>
+        </div>
+      </a>
+    </article>
+  {% endfor %}
+</section>
