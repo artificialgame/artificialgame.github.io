@@ -10,7 +10,7 @@ paginate_path: "/page/:num/"
 collections:
   games:
     output: true
-    permalink: /games/:slug/
+    permalink: /games/:name/
 defaults:
   - scope:
       path: ""
