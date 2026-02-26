@@ -21,6 +21,7 @@ defaults:
       seo_type: VideoGame
 plugins:
   - jekyll-sitemap
+  - jekyll-paginate
 exclude:
   - README.md
   - Gemfile
