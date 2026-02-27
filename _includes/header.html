@@ -1,10 +1,21 @@
 <header class="site-header">
   <div class="container nav-wrap">
-    <a class="logo" href="{{ '/' | relative_url }}">🎮 {{ site.title }}</a>
-    <nav>
+    <a class="logo" href="{{ '/' | relative_url }}" aria-label="{{ site.title }} home">
+      <span class="logo-mark">🎮</span>
+      <span>{{ site.title }}</span>
+    </a>
+
+    <button id="menuToggle" class="icon-button menu-toggle" aria-expanded="false" aria-controls="primaryNav" aria-label="Toggle navigation menu">
+      ☰
+    </button>
+
+    <nav id="primaryNav" class="primary-nav" aria-label="Primary">
       <a href="{{ '/' | relative_url }}">Home</a>
       <a href="{{ '/games/' | relative_url }}">Games</a>
     </nav>
-    <button id="themeToggle" class="theme-toggle" aria-label="Toggle light and dark theme">🌓</button>
+
+    <button id="themeToggle" class="icon-button theme-toggle" aria-label="Toggle light and dark theme" aria-pressed="false">
+      <span class="theme-icon" aria-hidden="true">🌙</span>
+    </button>
   </div>
 </header>

@@ -1,5 +1,15 @@
 <footer class="site-footer">
-  <div class="container">
+  <div class="container footer-wrap">
+    <div>
+      <p class="footer-title">{{ site.title }}</p>
+      <p class="footer-copy">Classic browser games with a modern experience.</p>
+    </div>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="{{ '/' | relative_url }}">Home</a>
+      <a href="{{ '/games/' | relative_url }}">Game Library</a>
+    </nav>
+  </div>
+  <div class="container footer-meta">
     <p>© {{ 'now' | date: '%Y' }} {{ site.title }}. Built for GitHub Pages with Jekyll.</p>
   </div>
 </footer>
