@@ -2,22 +2,94 @@
   const canvas = document.getElementById('gameCanvas');
   if (!canvas?.getContext) return;
   const ctx = canvas.getContext('2d');
-  const w=canvas.width,h=canvas.height;
-  let player={x:w/2,y:h-40,r:14};
-  let points=[]; let score=0;
-  function spawn(){ points.push({x:20+Math.random()*(w-40), y:-10, good:Math.random()>0.25}); }
-  window.addEventListener('keydown',e=>{ if(e.key==='ArrowLeft') player.x-=20; if(e.key==='ArrowRight') player.x+=20; player.x=Math.max(20,Math.min(w-20,player.x));});
-  canvas.addEventListener('pointermove',e=>{const rect=canvas.getBoundingClientRect();player.x=(e.clientX-rect.left)*(w/rect.width);});
-  setInterval(spawn,800);
-  function loop(){
-    ctx.fillStyle='#05060d';ctx.fillRect(0,0,w,h);
-    ctx.fillStyle='#fff';ctx.font='bold 22px sans-serif';ctx.fillText('SPACE INVADERS '+score,20,30);
-    ctx.fillStyle='#41f1d1';ctx.beginPath();ctx.arc(player.x,player.y,player.r,0,Math.PI*2);ctx.fill();
-    points.forEach(p=>{ p.y+=3; ctx.fillStyle=p.good?'#22c55e':'#ef4444';ctx.fillRect(p.x-8,p.y-8,16,16);
-      if (Math.abs(p.x-player.x)<18 && Math.abs(p.y-player.y)<18){ score += p.good?10:-15; p.y=h+20; }
-    });
-    points=points.filter(p=>p.y<h+20);
-    requestAnimationFrame(loop);
+
+  const player = { x: canvas.width / 2 - 22, y: canvas.height - 34, w: 44, h: 12, speed: 6 };
+  const keys = new Set();
+  let bullets = [];
+  let invaders = [];
+  let score = 0;
+  let dir = 1;
+
+  function spawnWave() {
+    invaders = [];
+    for (let r = 0; r < 4; r++) {
+      for (let c = 0; c < 9; c++) {
+        invaders.push({ x: 80 + c * 62, y: 50 + r * 42, alive: true });
+      }
+    }
   }
-  loop();
+
+  window.addEventListener('keydown', e => {
+    keys.add(e.key);
+    if (e.key === ' ') bullets.push({ x: player.x + player.w / 2, y: player.y - 8 });
+  });
+  window.addEventListener('keyup', e => keys.delete(e.key));
+  canvas.addEventListener('pointermove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+    player.x = Math.max(0, Math.min(canvas.width - player.w, x - player.w / 2));
+  });
+  canvas.addEventListener('pointerdown', () => bullets.push({ x: player.x + player.w / 2, y: player.y - 8 }));
+
+  spawnWave();
+
+  function update() {
+    if (keys.has('ArrowLeft')) player.x -= player.speed;
+    if (keys.has('ArrowRight')) player.x += player.speed;
+    player.x = Math.max(0, Math.min(canvas.width - player.w, player.x));
+
+    bullets.forEach(b => (b.y -= 8));
+    bullets = bullets.filter(b => b.y > -10);
+
+    let edgeHit = false;
+    invaders.forEach(i => {
+      if (!i.alive) return;
+      i.x += dir * 1.1;
+      if (i.x < 20 || i.x > canvas.width - 36) edgeHit = true;
+    });
+    if (edgeHit) {
+      dir *= -1;
+      invaders.forEach(i => (i.y += 16));
+    }
+
+    bullets.forEach(b => {
+      invaders.forEach(i => {
+        if (!i.alive) return;
+        if (b.x > i.x && b.x < i.x + 28 && b.y > i.y && b.y < i.y + 20) {
+          i.alive = false;
+          b.y = -20;
+          score += 10;
+        }
+      });
+    });
+
+    if (invaders.every(i => !i.alive)) spawnWave();
+  }
+
+  function draw() {
+    ctx.fillStyle = '#030712';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#67e8f9';
+    ctx.fillRect(player.x, player.y, player.w, player.h);
+
+    ctx.fillStyle = '#f8fafc';
+    bullets.forEach(b => ctx.fillRect(b.x - 2, b.y, 4, 10));
+
+    invaders.forEach((i, idx) => {
+      if (!i.alive) return;
+      ctx.fillStyle = idx % 2 ? '#a3e635' : '#fb7185';
+      ctx.fillRect(i.x, i.y, 28, 20);
+    });
+
+    ctx.fillStyle = '#e2e8f0';
+    ctx.font = '18px sans-serif';
+    ctx.fillText(`Score: ${score}`, 16, 26);
+  }
+
+  (function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+  })();
 })();
