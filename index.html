@@ -40,36 +40,7 @@ description: Artificial Game hosts classic free browser games you can play insta
   </div>
 </section>
 
-<section class="container">
-  <h2>Latest Games</h2>
-  {% assign latest_games = site.games | sort: 'date' | reverse %}
-  {% assign per_page = site.paginate | default: 8 %}
-  {% assign current_page = paginator.page | default: 1 %}
-  {% assign offset_games = per_page | times: current_page | minus: per_page %}
-  {% assign total_pages = latest_games.size | plus: per_page | minus: 1 | divided_by: per_page %}
-  <div class="game-grid" id="latestGrid">
-    {% for game in latest_games offset: offset_games limit: per_page %}
-      <article class="game-card" data-category="{{ game.category | downcase }}" data-search="{{ game.title }} {{ game.tags | join: ' ' }} {{ game.description }}">
-        <a href="{{ game.url | relative_url }}">
-          <img loading="lazy" src="{{ game.thumbnail | relative_url }}" alt="{{ game.title }} thumbnail" />
-          <div>
-            <h3>{{ game.title }}</h3>
-            <p>{{ game.short_description }}</p>
-          </div>
-        </a>
-      </article>
-    {% endfor %}
-  </div>
-  {% assign prev_page = current_page | minus: 1 %}
-  {% assign next_page = current_page | plus: 1 %}
-  <nav class="pagination">
-    {% if current_page > 1 %}
-      {% if prev_page == 1 %}<a href="{{ '/' | relative_url }}">Newer</a>{% else %}<a href="{{ '/page/' | append: prev_page | append: '/' | relative_url }}">Newer</a>{% endif %}
-    {% endif %}
-    <span>Page {{ current_page }} of {{ total_pages }}</span>
-    {% if current_page < total_pages %}<a href="{{ '/page/' | append: next_page | append: '/' | relative_url }}">Older</a>{% endif %}
-  </nav>
-</section>
+{% include latest-games.html current_page=1 %}
 
 <section class="container faq">
   <h2>FAQ</h2>
