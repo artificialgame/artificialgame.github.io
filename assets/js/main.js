@@ -1,11 +1,31 @@
 (() => {
   const root = document.documentElement;
-  const savedTheme = localStorage.getItem('ag-theme');
-  if (savedTheme === 'light') root.classList.add('light');
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = themeToggle?.querySelector('.theme-icon');
+  const menuToggle = document.getElementById('menuToggle');
+  const primaryNav = document.getElementById('primaryNav');
 
-  document.getElementById('themeToggle')?.addEventListener('click', () => {
-    root.classList.toggle('light');
-    localStorage.setItem('ag-theme', root.classList.contains('light') ? 'light' : 'dark');
+  const savedTheme = localStorage.getItem('ag-theme');
+  const preferredTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  const activeTheme = savedTheme || preferredTheme;
+
+  const setTheme = (theme) => {
+    root.setAttribute('data-theme', theme);
+    localStorage.setItem('ag-theme', theme);
+    if (themeToggle) themeToggle.setAttribute('aria-pressed', String(theme === 'light'));
+    if (themeIcon) themeIcon.textContent = theme === 'light' ? '☀️' : '🌙';
+  };
+
+  setTheme(activeTheme);
+
+  themeToggle?.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    setTheme(next);
+  });
+
+  menuToggle?.addEventListener('click', () => {
+    const isOpen = primaryNav?.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', String(Boolean(isOpen)));
   });
 
   const searchInput = document.getElementById('gameSearch');
@@ -15,7 +35,7 @@
 
   const applyFilters = () => {
     const term = (searchInput?.value || '').toLowerCase().trim();
-    cards.forEach(card => {
+    cards.forEach((card) => {
       const category = card.dataset.category || '';
       const hay = (card.dataset.search || '').toLowerCase();
       const categoryOk = activeCategory === 'all' || category === activeCategory;
@@ -25,10 +45,10 @@
   };
 
   searchInput?.addEventListener('input', applyFilters);
-  filterButtons.forEach(btn => {
+  filterButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      activeCategory = btn.dataset.category;
-      filterButtons.forEach(b => b.classList.remove('active'));
+      activeCategory = btn.dataset.category || 'all';
+      filterButtons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       applyFilters();
     });
